@@ -1,0 +1,18 @@
+1.prepare:
+进入睡眠之前，在g_main_context_prepare里，mainloop调用所有Source的prepare函数，计算最小的timeout时间，该时间决定下一次睡眠的时间。
+睡眠后，开始做poll fd的操作;
+同时，该函数返回值决定该GSource的stuct pollfd是否希望被poll监控。
+2.check:
+poll被唤醒后，在g_main_context_check里，mainloop调用所有Source的check函数;
+该函数返回值描述该GSource的pollfd是否有事件发生，check检查是否有Source已经准备好了。如果poll是由于错误或者超时等原因唤醒的，就不必进行dispatch了。
+3.dispatch:
+当有Source准备好了(check函数返回true)，在g_main_context_dispatch里，mainloop调用所有check函数返回true的GSource的dispatch函数，去分发消息。
+4.finalize
+在Source被移出时，mainloop调用该函数去销毁Source。
+
+
+
+
+references:
+
+http://blog.csdn.net/jack0106/article/details/6258422
